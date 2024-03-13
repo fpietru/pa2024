@@ -10,7 +10,10 @@ using namespace std;
 
 constexpr int MxN = 3e5+5;
 int ans[MxN];
+int zlicz[MxN];
 map<int, int> mp;
+set<int> st;
+vector<int> krotnosci;
 
 int main() {
 	ios_base::sync_with_stdio(0);
@@ -24,12 +27,17 @@ int main() {
 	}
 	
 	int mx = 0;
-	for (auto p : mp)
+	for (auto p : mp) {
 		mx = max(mx, p.SD);
+		zlicz[p.SD]++;
+		st.insert(p.SD);
+	}
+	for (auto p : st)
+		krotnosci.PB(p);
 	
 	for (int i=1; i<=mx; i++) {
-		for (auto p : mp)
-			ans[i] += (p.SD / i) * i;
+		for (auto p : krotnosci)
+			ans[i] += (p / i) * i * zlicz[p];
 	}
 	
 	for (int i=1; i<=n; i++)
