@@ -36,18 +36,24 @@ void dodaj(pii e) {
 		krawedzie[0].insert(krawedz(v, u));
 	}
 	else {
-		if (G[0][v].size() > G[0][u].size()) swap(v, u);
+		// if (G[0][v].size() > G[0][u].size()) swap(v, u);
 		for (auto z : G[0][v])
-			if (G[0][u].find(z) == G[0][u].end()) {
+			if (z != u && G[0][u].find(z) == G[0][u].end()) {
 				dodaj(make_pair(z, u));			
+			}
+		for (auto z : G[0][u])
+			if (z != v && G[0][v].find(z) == G[0][v].end()) {
+				dodaj(make_pair(z, v));			
 			}
 		dodaj(e);
 	}
 }
 
 void usun(pii e) {
+	if (e == make_pair(0,0))
+		return;
 	int v = e.FR;
-	int u = e.SD; 
+	int u = e.SD;
 	int middle = -1;
 	for (auto z : G[0][v])
 		if (G[0][u].find(z) != G[0][u].end()) {
@@ -62,15 +68,22 @@ void usun(pii e) {
 		krawedzie[0].erase(krawedz(v, u));
 	}
 	else {
-		pii nowa = {0, 0};
+		pii nowa1 = {0, 0}, nowa2 = {0, 0};
 		for (auto z : G[0][v])
-			if (G[0][u].find(z) == G[0][u].end()) {
-				nowa = make_pair(z, u);
-				dodaj(nowa);			
+			if (z != u && G[0][u].find(z) == G[0][u].end()) {
+				nowa1 = make_pair(z, u);
+				dodaj(nowa1);	
+				break;
+			}
+		for (auto z : G[0][u])
+			if (z != v && G[0][v].find(z) == G[0][v].end()) {
+				nowa2 = make_pair(z, v);
+				dodaj(nowa2);	
 				break;
 			}
 		usun(e);
-		usun(nowa);
+		usun(nowa1);
+		usun(nowa2);
 	}
 }
 
@@ -88,6 +101,18 @@ int main() {
 			krawedzie[k].insert(krawedz(a, b));
 		}	
 	}
+	
+	/*cout << "n = " << n << "\n";
+	for (int i=1; i<=n; i++) {
+		cout << i << ": ";
+		for (auto p : G[0][i])
+			cout << p << " ";
+		cout << " | ";
+		for (auto p : G[1][i])
+			cout << p << " ";
+		cout << "\n";
+	}*/
+	
 	
 	for (auto e : krawedzie[1]) {
 		if (krawedzie[0].find(e) == krawedzie[0].end())
@@ -107,12 +132,12 @@ int main() {
 	for (auto p : ans)
 		cout << p.FR << " " << p.SD.FR << " " << p.SD.SD << "\n"; 
 	
-	/*
-	for (int i=1; i<=n; i++) {
-		cout << i << ": ";
-		for (auto p : G[0][i])
-			cout << p << " ";
-		cout << "\n";
+	
+	/*for (int i=1; i<=n; i++) {
+		if (G[0][i] != G[1][i]) {
+			cout << "ZLE\n";
+			break;
+		}
 	}*/
 	
 
