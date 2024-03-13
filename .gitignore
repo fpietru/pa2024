@@ -1,2 +1,4 @@
 makefile
 *.txt
+*.in
+*.out
