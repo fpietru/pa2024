@@ -13,6 +13,8 @@ constexpr int MxN = 3e4+4;
 set<int> G[2][MxN];
 set<pii> krawedzie[2];
 vector<pair<char, pii>> ans;
+vector<pii> history;
+vector<pii> todo;
 
 pii krawedz(int a, int b) {
 	if (a > b) swap(a, b);
@@ -20,6 +22,13 @@ pii krawedz(int a, int b) {
 }
 
 void dodaj(pii e) {
+	if (history.size() >= 2 && e == history[history.size()-2]) {
+		todo.PB(e);
+		return;
+	}
+	history.PB(e);
+	
+	cout << e.FR << " " << e.SD << "\n";
 	int v = e.FR;
 	int u = e.SD; 
 	int middle = -1;
@@ -29,7 +38,7 @@ void dodaj(pii e) {
 			break;
 		}
 	if (middle != -1) {
-		// cout << "+ " << v << " " << u << "\n";
+		cout << "+ " << v << " " << u << "\n";
 		ans.PB(make_pair('+', make_pair(v, u)));
 		G[0][v].insert(u);
 		G[0][u].insert(v);
@@ -61,7 +70,7 @@ void usun(pii e) {
 			break;
 		}
 	if (middle != -1) {
-		// cout << "- " << v << " " << u << "\n";
+		cout << "- " << v << " " << u << "\n";
 		ans.PB(make_pair('-', make_pair(v, u)));
 		G[0][v].erase(u);
 		G[0][u].erase(v);
@@ -111,10 +120,14 @@ int main() {
 		for (auto p : G[1][i])
 			cout << p << " ";
 		cout << "\n";
-	}*/
-	
+	} */
 	
 	for (auto e : krawedzie[1]) {
+		if (krawedzie[0].find(e) == krawedzie[0].end())
+			dodaj(e);
+	}
+	
+	for (auto e : todo) {
 		if (krawedzie[0].find(e) == krawedzie[0].end())
 			dodaj(e);
 	}
@@ -133,14 +146,6 @@ int main() {
 		cout << p.FR << " " << p.SD.FR << " " << p.SD.SD << "\n"; 
 	
 	
-	/*for (int i=1; i<=n; i++) {
-		if (G[0][i] != G[1][i]) {
-			cout << "ZLE\n";
-			break;
-		}
-	}*/
-	
 
 	return 0;
 }
-
